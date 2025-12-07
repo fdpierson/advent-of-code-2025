@@ -14,7 +14,7 @@ type Interval struct {
 	Upper int
 }
 
-func getIntervals(scanner *bufio.Scanner) []Interval {
+func getSortedIntervals(scanner *bufio.Scanner) []Interval {
 	ivs := make([]Interval, 0)
 
 	for scanner.Scan() {
@@ -38,7 +38,7 @@ func getIntervals(scanner *bufio.Scanner) []Interval {
 	return ivs
 }
 
-func getIds(scanner *bufio.Scanner) []int {
+func getSortedIds(scanner *bufio.Scanner) []int {
 	ids := make([]int, 0)
 
 	for scanner.Scan() {
@@ -58,9 +58,8 @@ func main() {
 	defer file.Close()
 
 	scanner := bufio.NewScanner(file)
-
-	ivs := getIntervals(scanner)
-	ids := getIds(scanner)
+	ivs := getSortedIntervals(scanner)
+	ids := getSortedIds(scanner)
 
 	avail := 0
 	ivIndex := 0
