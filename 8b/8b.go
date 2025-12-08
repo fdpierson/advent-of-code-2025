@@ -1,0 +1,93 @@
+package main
+
+import (
+	"bufio"
+	"cmp"
+	"fmt"
+	"math"
+	"os"
+	"slices"
+	"strconv"
+	"strings"
+)
+
+type Point struct {
+	x int
+	y int
+	z int
+}
+
+type Pair struct {
+	a Point
+	b Point
+	d float64
+}
+
+func main() {
+	file, _ := os.Open("8b.txt")
+	defer file.Close()
+
+	scanner := bufio.NewScanner(file)
+	points := make([]Point, 0)
+
+	for scanner.Scan() {
+		line := scanner.Text()
+		coords := strings.Split(line, ",")
+
+		x, _ := strconv.Atoi(coords[0])
+		y, _ := strconv.Atoi(coords[1])
+		z, _ := strconv.Atoi(coords[2])
+
+		points = append(points, Point{x, y, z})
+	}
+
+	pairs := make([]Pair, 0)
+
+	// Horrible O(n^2 log n) algorithm
+	for i := 0; i < len(points); i++ {
+		for j := i + 1; j < len(points); j++ {
+			a := points[i]
+			b := points[j]
+
+			x2 := math.Pow(float64(b.x - a.x), 2.0)
+			y2 := math.Pow(float64(b.y - a.y), 2.0)
+			z2 := math.Pow(float64(b.z - a.z), 2.0)
+
+			d := math.Sqrt(x2 + y2 + z2)
+
+			pairs = append(pairs, Pair{a, b, d})
+		}
+	}
+
+	slices.SortFunc(pairs, func(a, b Pair) int {
+		return cmp.Compare(a.d, b.d)
+	})
+
+	// I can't think of anything better than this
+	p2c := map[Point]int{}
+	c2p := map[int][]Point{}
+
+	for i, point := range points {
+		p2c[point] = i + 1
+		c2p[i + 1] = append(c2p[i + 1], point)
+	}
+
+	for _, pair := range pairs {
+		ca := p2c[pair.a]
+		cb := p2c[pair.b]
+
+		if ca != cb {
+			for _, point := range c2p[cb] {
+				p2c[point] = ca
+				c2p[ca] = append(c2p[ca], point)
+			}
+
+			delete(c2p, cb)
+		}
+
+		if len(c2p) == 1 {
+			fmt.Println(pair.a.x * pair.b.x)
+			break
+		}
+	}
+}
