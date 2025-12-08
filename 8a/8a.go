@@ -4,7 +4,6 @@ import (
 	"bufio"
 	"cmp"
 	"fmt"
-	"math"
 	"os"
 	"slices"
 	"strconv"
@@ -21,7 +20,7 @@ type Point struct {
 type Pair struct {
 	a Point
 	b Point
-	d float64
+	d int
 }
 
 func main() {
@@ -59,7 +58,7 @@ func main() {
 			y2 := (b.y - a.y) * (b.y - a.y)
 			z2 := (b.z - a.z) * (b.z - a.z)
 
-			d := math.Sqrt(float64(x2 + y2 + z2))
+			d := x2 + y2 + z2
 
 			pairs = append(pairs, Pair{a, b, d})
 		}
