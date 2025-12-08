@@ -9,6 +9,7 @@ import (
 	"slices"
 	"strconv"
 	"strings"
+	"time"
 )
 
 type Point struct {
@@ -24,6 +25,8 @@ type Pair struct {
 }
 
 func main() {
+	start := time.Now()
+
 	file, _ := os.Open("8a.txt")
 	defer file.Close()
 
@@ -41,6 +44,9 @@ func main() {
 		points = append(points, Point{x, y, z})
 	}
 
+	fmt.Printf("First part: %v\n", time.Since(start))
+	start = time.Now()
+
 	pairs := make([]Pair, 0)
 
 	// Horrible O(n^2 log n) algorithm
@@ -49,11 +55,11 @@ func main() {
 			a := points[i]
 			b := points[j]
 
-			x2 := math.Pow(float64(b.x - a.x), 2.0)
-			y2 := math.Pow(float64(b.y - a.y), 2.0)
-			z2 := math.Pow(float64(b.z - a.z), 2.0)
+			x2 := (b.x - a.x) * (b.x - a.x)
+			y2 := (b.y - a.y) * (b.y - a.y)
+			z2 := (b.z - a.z) * (b.z - a.z)
 
-			d := math.Sqrt(x2 + y2 + z2)
+			d := math.Sqrt(float64(x2 + y2 + z2))
 
 			pairs = append(pairs, Pair{a, b, d})
 		}
@@ -62,6 +68,9 @@ func main() {
 	slices.SortFunc(pairs, func(a, b Pair) int {
 		return cmp.Compare(a.d, b.d)
 	})
+
+	fmt.Printf("Second part: %v\n", time.Since(start))
+	start = time.Now()
 
 	// I can't think of anything better than this
 	p2c := map[Point]int{}
@@ -96,6 +105,8 @@ func main() {
 
 	slices.Sort(sizes)
 	slices.Reverse(sizes)
+
+	fmt.Printf("Third part: %v\n", time.Since(start))
 
 	fmt.Println(sizes[0] * sizes[1] * sizes[2])
 }
