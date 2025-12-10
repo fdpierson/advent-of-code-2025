@@ -5,7 +5,6 @@ import (
 	"fmt"
 	"math"
 	"os"
-	"slices"
 	"strconv"
 	"strings"
 	"time"
@@ -54,7 +53,7 @@ func getPairs(points []Point) []Pair {
 	return pairs
 }
 
-func getHorizPairsSorted(pairs []Pair) []Pair {
+func getHorizPairs(pairs []Pair) []Pair {
 	horiz := make([]Pair, 0)
 
 	for _, pair := range pairs {
@@ -63,14 +62,10 @@ func getHorizPairsSorted(pairs []Pair) []Pair {
 		}
 	}
 
-	slices.SortFunc(horiz, func(p1, p2 Pair) int {
-		return p1.a.y - p2.a.y
-	})
-
 	return horiz
 }
 
-func getVertPairsSorted(pairs []Pair) []Pair {
+func getVertPairs(pairs []Pair) []Pair {
 	vert := make([]Pair, 0)
 
 	for _, pair := range pairs {
@@ -78,10 +73,6 @@ func getVertPairsSorted(pairs []Pair) []Pair {
 			vert = append(vert, pair)
 		}
 	}
-
-	slices.SortFunc(vert, func(p1, p2 Pair) int {
-		return p1.a.x - p2.a.x
-	})
 
 	return vert
 }
@@ -149,8 +140,8 @@ func main() {
 	points := getPoints()
 	pairs := getPairs(points)
 
-	hPairs := getHorizPairsSorted(pairs)
-	vPairs := getVertPairsSorted(pairs)
+	hPairs := getHorizPairs(pairs)
+	vPairs := getVertPairs(pairs)
 
 	hInt := make(map[Point][]Pair)
 	vInt := make(map[Point][]Pair)
