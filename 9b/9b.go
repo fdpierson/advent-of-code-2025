@@ -106,6 +106,30 @@ func isStrictlyBetween(a, i, b int) bool {
 	}
 }
 
+func doesHPairIntWithRect(a, b Point, hPair Pair) bool {
+	if !isStrictlyBetween(a.y, hPair.a.y, b.y) {
+		return false
+	} else if a.x == hPair.a.x && !isStrictlyBetween(a.x, hPair.b.x, b.x) {
+		return false
+	} else if a.x == hPair.b.x && !isStrictlyBetween(a.x, hPair.a.x, b.x) {
+		return false
+	} else {
+		return true
+	}
+}
+
+func doesVPairIntWithRect(a, b Point, vPair Pair) bool {
+	if !isStrictlyBetween(a.x, vPair.a.x, b.x) {
+		return false
+	} else if a.y == vPair.a.y && !isStrictlyBetween(a.y, vPair.b.y, b.y) {
+		return false
+	} else if a.y == vPair.b.y && !isStrictlyBetween(a.y, vPair.a.y, b.y) {
+		return false
+	} else {
+		return true
+	}
+}
+
 func getMaxArea(a, b Point, maxArea int) int {
 	dx := math.Abs(float64(a.x - b.x)) + 1.0
 	dy := math.Abs(float64(a.y - b.y)) + 1.0
@@ -156,53 +180,29 @@ func main() {
 
 			// There can't be any hPair intersections between (a.x, a.y) and (a.x, b.y)
 			for _, hPair := range hInt[a] {
-				if isStrictlyBetween(a.y, hPair.a.y, b.y) {
-					if a.x == hPair.a.x && !isStrictlyBetween(a.x, hPair.b.x, b.x) {
-						// do nothing
-					} else if a.x == hPair.b.x && !isStrictlyBetween(a.x, hPair.a.x, b.x) {
-						// do nothing
-					} else {
-						goto inter
-					}
+				if doesHPairIntWithRect(a, b, hPair) {
+					goto inter
 				}
 			}
 
 			// There can't be any hPair intersections between (b.x, a.y) and (b.x, b.y)
 			for _, hPair := range hInt[b] {
-				if isStrictlyBetween(a.y, hPair.a.y, b.y) {
-					if a.x == hPair.a.x && !isStrictlyBetween(a.x, hPair.b.x, b.x) {
-						// do nothing
-					} else if a.x == hPair.b.x && !isStrictlyBetween(a.x, hPair.a.x, b.x) {
-						// do nothing
-					} else {
-						goto inter
-					}
+				if doesHPairIntWithRect(a, b, hPair) {
+					goto inter
 				}
 			}
 
 			// There can't be any vPair intersections between (a.x, a.y) and (b.x, a.y)
 			for _, vPair := range vInt[a] {
-				if isStrictlyBetween(a.x, vPair.a.x, b.x) {
-					if a.y == vPair.a.y && !isStrictlyBetween(a.y, vPair.b.y, b.y) {
-						// do nothing
-					} else if a.y == vPair.b.y && !isStrictlyBetween(a.y, vPair.a.y, b.y) {
-						// do nothing
-					} else {
-						goto inter
-					}
+				if doesVPairIntWithRect(a, b, vPair) {
+					goto inter
 				}
 			}
 
 			// There can't be any vPair intersections between (a.x, b.y) and (b.x, b.y)
 			for _, vPair := range vInt[b] {
-				if isStrictlyBetween(a.x, vPair.a.x, b.x) {
-					if a.y == vPair.a.y && !isStrictlyBetween(a.y, vPair.b.y, b.y) {
-						// do nothing
-					} else if a.y == vPair.b.y && !isStrictlyBetween(a.y, vPair.a.y, b.y) {
-						// do nothing
-					} else {
-						goto inter
-					}
+				if doesVPairIntWithRect(a, b, vPair) {
+					goto inter
 				}
 			}
 
